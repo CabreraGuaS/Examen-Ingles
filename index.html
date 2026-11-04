@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOEFL ITP · Grammar Trainer</title>
+<style>
+:root {
+  --bg: #f4f6f9;
+  --ink: #1a202c;
+  --mut: #5a6578;
+  --line: #e2e8f0;
+  --card: #ffffff;
+  --acc: #2563eb;
+  --mark: #ffe14d;
+  --ok: #166534;
+  --bad: #991b1b;
+  --okbg: #dcfce7;
+  --badbg: #fee2e2;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 640px; margin: 0 auto; padding: 20px 16px 48px; }
+h1 { font: 700 26px/1.15 Georgia, "Times New Roman", serif; margin: 8px 0 4px; }
+h2 { font: 700 18px Georgia, serif; margin: 24px 0 8px; }
+p.sub { color: var(--mut); margin: 0 0 16px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin: 12px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+label { display: block; font-size: 14px; color: var(--mut); margin: 10px 0 4px; }
+select { width: 100%; padding: 11px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; }
+button { font: inherit; cursor: pointer; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--ink); padding: 13px 14px; text-align: left; width: 100%; transition: background 0.15s ease; }
+button:hover { background: #f8fafc; }
+button:focus-visible, select:focus-visible { outline: 3px solid var(--acc); outline-offset: 2px; }
+.go { background: var(--acc); color: #ffffff; border-color: var(--acc); text-align: center; font-weight: 600; margin-top: 10px; }
+.go:hover { background: #1d4ed8; }
+.ghost { text-align: center; color: var(--mut); margin-top: 8px; border: none; background: transparent; }
+.ghost:hover { background: transparent; color: var(--ink); }
+.bar { display: flex; justify-content: space-between; color: var(--mut); font-size: 14px; }
+.sent { font: 21px/1.6 Georgia, "Times New Roman", serif; margin: 18px 0; }
+.blank { display: inline-block; width: 70px; border-bottom: 2px solid var(--ink); margin: 0 2px; }
+u { text-decoration: none; background: linear-gradient(transparent 62%, var(--mark) 62%); padding: 0 1px; }
+sup { font: 700 12px system-ui; color: var(--acc); margin-right: 2px; }
+.opts { display: grid; gap: 8px; }
+.opts button b { display: inline-block; width: 24px; color: var(--acc); }
+.opts button.sel { border-color: var(--acc); box-shadow: inset 0 0 0 1px var(--acc); background: #eff6ff; }
+.opts button.ok { background: var(--okbg); border-color: var(--ok); color: var(--ok); }
+.opts button.no { background: var(--badbg); border-color: var(--bad); color: var(--bad); }
+.exp { border-left: 4px solid var(--acc); padding: 8px 12px; margin: 14px 0; color: var(--ink); background: #f8fafc; border-radius: 0 8px 8px 0; }
+.big { font: 700 44px Georgia, serif; margin: 4px 0; }
+.row { display: flex; align-items: center; gap: 10px; margin: 8px 0; font-size: 14px; }
+.row span:first-child { flex: 0 0 40%; }
+.meter { flex: 1; height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; }
+.meter i { display: block; height: 100%; background: var(--acc); }
+.err { border-top: 1px solid var(--line); padding: 12px 0; }
+.tag { font-size: 13px; color: var(--mut); }
+
+.grid { display: grid; gap: 10px; margin: 14px 0; }
+.big2 { font: 700 18px Georgia, serif; padding: 16px; }
+.big2 small { display: block; font: 400 13px system-ui, sans-serif; color: var(--mut); margin-top: 2px; }
+.bd { float: right; font-size: 12px; padding: 1px 8px; border-radius: 10px; background: var(--line); color: var(--ink); }
+.bd.g { background: var(--okbg); color: var(--ok); }
+.bd.r { background: var(--badbg); color: var(--bad); }
+.bd.m { background: #fef3c7; color: #92400e; }
+.rules { margin: 8px 0 0; padding-left: 20px; }
+.rules li { margin: 7px 0; }
+details summary { cursor: pointer; font-weight: 600; }
+.pri { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--acc); margin: 20px 0 6px; font-weight: 700; }
+.cat { display: block; margin: 6px 0; }
+.cat small { color: var(--mut); }
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+const Q = [];
+const A = (l, c, s, o, a, e) => Q.push({ t: "A", l, c, s, o: o.split("|"), a: "ABCD".indexOf(a), e });
+const B = (l, c, s, a, e) => Q.push({ t: "B", l, c, s, a: "ABCD".indexOf(a), e });
+
+// ===== LOTE 1 – Parte A =====
+A(1,"Inversión","Not until the experiment ended ____ the results.","the scientists analyzed|did the scientists analyze|the scientists did analyze|analyzed the scientists","B","Not until al inicio pide inversión: did the scientists analyze.");
+A(1,"Participios","____ in 1998, the company now employs over 5,000 people.","Founding|Founded|It was founded|Having founded","B","Participio pasado con sentido pasivo: la empresa fue fundada.");
+A(1,"Comparativos","The more she practiced, ____ she became.","the confident|more confident|the more confident|most confident","C","The more… the more confident: comparativo doble con the.");
+A(1,"Comparativos","Mount Everest is ____ mountain in the world.","higher|the highest|most high|highest","B","Superlativo con the: the highest.");
+A(1,"Participios","____ that the bridge was unsafe, officials closed it.","Finding|Found|They found|It was found","A","Los funcionarios encontraron (activo): Finding that…");
+A(1,"Estructura","The report states ____ unemployment has fallen.","what|that|which|it","B","States that + cláusula.");
+A(1,"Inversión","Rarely ____ such a beautiful sunset.","I have seen|have I seen|I saw|did I seen","B","Rarely al inicio invierte auxiliar y sujeto: have I seen.");
+A(1,"Comparativos","Alaska is ____ than any other state in the US.","larger|the larger|more large|largest","A","Comparación con than: larger than.");
+A(1,"Preguntas indirectas","She asked me ____.","what time does the library close|what time the library closed|what time did the library close|the library closed what time","B","Pregunta indirecta: orden de afirmación, sin did/does.");
+A(1,"Conectores","____ the heavy rain, the match continued.","Although|Despite|Because|However","B","Despite + sustantivo (the heavy rain).");
+A(1,"Condicionales","Tom would have passed the test if he ____ harder.","studied|had studied|would study|has studied","B","Tercer condicional: if + had + participio.");
+A(1,"Relativas","The students, ____ were tired, went home early.","that|who|they|whom they","B","Relativa no restrictiva (con comas): who, no that.");
+A(1,"Estructura","____ is essential for good health.","Exercise regularly|To exercise regular|Regular exercise|Exercising regular","C","Falta sujeto: adjetivo + sustantivo (Regular exercise).");
+A(1,"Subjuntivo","The committee insisted that he ____ the report immediately.","submits|submit|submitted|will submit","B","Después de insist that: forma base (subjuntivo).");
+A(1,"Participios","A tsunami is a series of waves ____ by an underwater earthquake.","caused|causing|are caused|which cause","A","Relativa reducida pasiva: (that are) caused.");
+A(1,"Inversión","Not only ____ the exam, but she also won a scholarship.","she passed|passed she|did she pass|she did pass","C","Not only al inicio invierte: did she pass.");
+A(1,"Estructura","____ the Internet has changed communication is obvious.","That|What|Which|Whether","A","That-clause como sujeto.");
+A(1,"Tiempos","By the time we arrived, the movie ____.","already started|had already started|has already started|was already starting","B","By the time + pasado simple: past perfect en la otra parte.");
+A(1,"Comparativos","She is ____ of the two sisters.","the taller|tallest|the tallest|more tall","A","Entre dos: comparativo con the.");
+A(1,"Concordancia","Neither the teacher nor the students ____ aware of the change.","was|is|were|has been","C","Neither…nor: concuerda con el sujeto más cercano (students).");
+A(1,"Conectores","Long ____ electricity was widely available, people used candles.","after|before|while|since","B","Long before = mucho antes de que.");
+A(1,"Patrones verbales","It is important ____ to class on time.","coming|to come|come|to coming","B","It is important + to + verbo.");
+A(1,"Relativas","The professor, ____ lectures are famous, will speak tonight.","who|whom|whose|which","C","Posesivo: whose lectures.");
+A(1,"Patrones verbales","He suggested ____ the meeting until Monday.","to postpone|postponing|to postponing|postpone","B","Suggest + gerundio.");
+A(1,"Condicionales","____ a computer, she would have finished the work.","Had she had|If she has|Would she have|She had had","A","Tercer condicional invertido: Had she had…");
+
+// ===== LOTE 1 – Parte B =====
+B(1,"Concordancia","The number of [A]students who [B]study abroad [C]have increased [D]dramatically.","C","The number of + singular: has increased.");
+B(1,"Conectores","[A]Despite of [B]the heavy traffic, [C]we arrived [D]on time.","A","Despite (sin of) o In spite of.");
+B(1,"Concordancia","Each of the [A]students [B]have [C]a separate [D]locker.","B","Each of + singular: has.");
+B(1,"Contables","The [A]informations that [B]she gave us [C]were [D]very useful.","A","Information es incontable.");
+B(1,"Tiempos","She [A]has been [B]living in Madrid [C]since [D]five years.","C","Duración: for five years.");
+B(1,"Singular/plural","Many [A]peoples [B]around the world [C]are learning [D]English.","A","People ya es plural.");
+B(1,"Comparativos","[A]The more you [B]practice, [C]better [D]you speak.","C","The better you speak: falta the.");
+B(1,"Conectores","[A]Although the weather was bad, [B]but [C]the game [D]was not cancelled.","B","Although y but juntos: sobra but.");
+B(1,"Singular/plural","He is [A]one of the [B]most [C]talented musician [D]in the orchestra.","C","One of the most talented musicians: plural.");
+B(1,"Patrones verbales","The committee [A]has decided [B]to postponing [C]the vote [D]until next week.","B","Decided to postpone (infinitivo).");
+B(1,"Redundancia","The reason [A]for the delay [B]was because [C]the [D]train broke down.","B","The reason… was that, no because.");
+B(1,"Contables","Scientists [A]have discovered [B]a lot of [C]new [D]informations about Mars.","D","Information es incontable.");
+B(1,"Preposiciones","She is [A]interested [B]in [C]to study [D]biology.","C","Preposición + gerundio: in studying.");
+B(1,"Condicionales","If I [A]will have [B]enough money, I [C]will buy [D]a new car.","A","No will en la cláusula con if: have.");
+B(1,"Relativas","The [A]book [B]who I [C]borrowed from the library [D]was excellent.","B","Cosa: which / that, no who.");
+B(1,"Comparativos","[A]The Nile is [B]longer [C]than [D]any other rivers in Africa.","D","Any other + singular: river.");
+B(1,"Patrones verbales","He [A]suggested me [B]to take [C]a different [D]route.","A","Suggested that I take / suggested taking.");
+B(1,"Concordancia","The [A]results of the study [B]was [C]published in [D]a leading journal.","B","Results → were.");
+B(1,"Conectores","[A]Because of [B]the machine was old, [C]it [D]broke down often.","A","Because of + sustantivo; con cláusula: Because.");
+B(1,"Tiempos","Yesterday I [A]have seen [B]an old friend [C]whom I [D]had not met for years.","A","Con yesterday: past simple (saw).");
+B(1,"Word form","She [A]speaks [B]English [C]very fluent [D]after only a year.","C","Adverbio: fluently.");
+B(1,"Contables","[A]The teacher [B]gave us [C]a lot of [D]homeworks.","D","Homework es incontable.");
+B(1,"Condicionales","He [A]would have [B]come [C]if he [D]knew about the party.","D","Tercer condicional: had known.");
+B(1,"Inversión","Hardly [A]had he [B]arrived [C]than the [D]phone rang.","C","Hardly… when (no than).");
+B(1,"Patrones verbales","The students [A]were made [B]write [C]a long essay [D]last week.","B","Make en pasiva recupera to: to write.");
+B(1,"Ortografía","[A]Their is [B]a significant [C]difference between [D]the two methods.","A","There is (no Their).");
+B(1,"Modales","We [A]must to [B]finish [C]the project [D]by Friday.","A","Modal + base verb: must finish.");
+B(1,"Relativas","The company [A]which [B]products are [C]popular is [D]expanding.","A","Posesivo: whose products.");
+B(1,"Conectores","[A]In spite of [B]he was tired, [C]he continued [D]working.","A","Con cláusula se usa Although.");
+B(1,"Comparativos","This is [A]the most [B]easiest [C]way to [D]solve the problem.","B","No mezclar: the easiest.");
+B(1,"Preguntas indirectas","She asked me [A]where [B]was the station [C]located [D]in the city.","B","Pregunta indirecta: where the station was.");
+B(1,"Cuantificadores","[A]Most of [B]students [C]in my class [D]passed the exam.","A","Most students / Most of the students.");
+B(1,"Concordancia","The [A]price of [B]oil [C]are expected [D]to rise.","C","Núcleo price: is expected.");
+B(1,"Patrones verbales","I [A]am used to [B]get up [C]early [D]every day.","B","Be used to + gerundio: getting up.");
+B(1,"Artículos","He [A]is [B]a [C]honest [D]man.","C","An honest man (h muda).");
+
+// ===== LOTE 2 – Concordancia y singular/plural – Parte A =====
+A(2,"Concordancia","The books on the top shelf ____ mine.","is|are|has|was","B","Núcleo: books (plural).");
+A(2,"Concordancia","A number of students ____ absent today.","is|are|has|was","B","A number of + plural: verbo plural.");
+A(2,"Concordancia","The number of absent students ____ small.","are|were|is|have","C","The number of + singular.");
+A(2,"Concordancia","Neither Tom nor his sisters ____ coming.","is|are|was|has","B","Sujeto más cercano: sisters (plural).");
+A(2,"Concordancia","Economics ____ my favorite subject.","are|is|were|have","B","Materias en -ics: singular.");
+A(2,"Concordancia","There ____ several reasons for the delay.","is|was|has been|are","D","There + sustantivo plural: are.");
+A(2,"Concordancia","Either the manager or the employees ____ responsible.","is|are|was|has","B","Más cercano: employees (plural).");
+A(2,"Concordancia","The police ____ investigating the case.","is|are|has been|was","B","Police es plural.");
+A(2,"Concordancia","Each of the new machines ____ tested.","were|are|has been|have been","C","Each of + singular.");
+A(2,"Concordancia","Ten kilometers ____ a long distance to walk.","are|is|were|have","B","Distancia como unidad: singular.");
+A(2,"Concordancia","The committee members, along with the chairman, ____ the plan.","supports|support|is supporting|has supported","B","Along with no suma: núcleo members (plural).");
+A(2,"Concordancia","Some of the information ____ outdated.","are|were|is|have been","C","Concuerda con el sustantivo: information (incontable).");
+A(2,"Concordancia","Half of the apples ____ rotten.","is|was|are|has","C","Half of + plural: are.");
+A(2,"Concordancia","The news about the elections ____ surprising.","were|are|was|have been","C","News es incontable: singular.");
+A(2,"Concordancia","Mathematics ____ difficult for many students.","are|is|were|have been","B","Materia en -ics: singular.");
+
+// ===== LOTE 2 – Parte B =====
+B(2,"Concordancia","The [A]list of [B]required books [C]are posted [D]on the website.","C","Núcleo list: is posted.");
+B(2,"Concordancia","A [A]number of [B]students [C]was [D]late for class.","C","A number of + plural: were.");
+B(2,"Concordancia","[A]Neither the [B]manager nor the [C]employees [D]was informed.","D","Sujeto más cercano plural: were informed.");
+B(2,"Concordancia","There [A]was [B]several [C]problems [D]with the plan.","A","Sujeto plural: There were.");
+B(2,"Concordancia","The [A]quality of the [B]products [C]have [D]improved.","C","Núcleo quality: has improved.");
+B(2,"Concordancia","[A]Either of the [B]two roads [C]lead to [D]the village.","C","Either of + singular: leads.");
+B(2,"Concordancia","[A]The [B]news [C]were [D]shocking.","C","News: singular, was.");
+B(2,"Concordancia","Fifty [A]dollars [B]are [C]too much [D]for a book.","B","Cantidad de dinero como unidad: is.");
+B(2,"Concordancia","Everyone [A]in the [B]class [C]have [D]finished.","C","Everyone es singular: has.");
+B(2,"Concordancia","[A]The [B]people [C]in the village [D]is friendly.","D","People es plural: are.");
+B(2,"Singular/plural","One of [A]the [B]most important [C]reason [D]is cost.","C","One of the… reasons: plural.");
+B(2,"Concordancia","[A]Physics [B]are [C]taught in [D]this school.","B","Physics: singular, is.");
+B(2,"Concordancia","The [A]teacher, [B]as well as the [C]students, [D]were late.","D","Núcleo teacher: was.");
+B(2,"Concordancia","[A]Both of [B]the [C]candidates [D]is qualified.","D","Both: plural, are.");
+B(2,"Concordancia","The [A]effects of [B]pollution [C]is [D]serious.","C","Núcleo effects: are.");
+B(2,"Concordancia","[A]A [B]lot of [C]research [D]have been done.","D","Research incontable: has been done.");
+B(2,"Concordancia","The [A]children [B]who [C]plays [D]here are noisy.","C","Antecedente plural: play.");
+B(2,"Singular/plural","[A]Several [B]of the [C]teacher [D]were absent.","C","Several of the teachers: plural.");
+B(2,"Concordancia","The [A]cost of [B]living [C]in cities [D]are rising.","D","Núcleo cost: is rising.");
+B(2,"Concordancia","[A]Neither of [B]the [C]answers [D]are correct.","D","Neither of + singular: is.");
+B(2,"Concordancia","[A]Every [B]student [C]need to [D]submit the form.","C","Every + singular: needs.");
+B(2,"Concordancia","[A]There [B]is [C]two [D]exits in this room.","B","Sujeto plural: There are.");
+B(2,"Concordancia","[A]The ability of [B]young children [C]to learn languages [D]are remarkable.","D","Núcleo ability: is.");
+B(2,"Concordancia","[A]Some of [B]the [C]water [D]were spilled.","D","Water incontable: was spilled.");
+B(2,"Concordancia","[A]The rest of the [B]students [C]is [D]leaving early.","C","The rest of + plural: are leaving.");
+B(2,"Singular/plural","Three [A]hundreds [B]students [C]attended [D]the lectures.","A","Con número exacto: three hundred (sin -s).");
+B(2,"Singular/plural","She has [A]two [B]brother and [C]three [D]sisters.","B","Two brothers: plural.");
+B(2,"Singular/plural","[A]Every [B]students [C]must bring [D]an ID.","B","Every + singular: student.");
+B(2,"Singular/plural","[A]These [B]kind of [C]problems [D]are common.","A","This kind of problems (o These kinds of).");
+B(2,"Singular/plural","[A]Many [B]of the [C]childs [D]were playing.","C","Plural irregular: children.");
+B(2,"Contables","He gave [A]me [B]a [C]few [D]advices.","D","Advice es incontable.");
+B(2,"Singular/plural","[A]Those [B]phenomenon [C]are [D]rare.","B","Plural: phenomena.");
+B(2,"Singular/plural","We [A]need [B]more [C]chair [D]for the meeting.","C","More + plural: chairs.");
+B(2,"Singular/plural","[A]Both [B]candidate [C]are [D]qualified.","B","Both + plural: candidates.");
+B(2,"Concordancia","The [A]criteria [B]for the job [C]is [D]clear.","C","Criteria es plural: are.");
+
+// ===== LOTE 2 (continuación) – Parte A =====
+A(2,"Concordancia","The professor, together with his students, ____ attending the conference.","are|is|were|have been","B","Núcleo: professor (singular). Together with no suma.");
+A(2,"Concordancia","The scissors ____ on the desk.","is|are|has|was","B","Scissors es plural: are.");
+A(2,"Concordancia","A pair of scissors ____ on the desk.","are|is|were|have","B","A pair of: núcleo pair (singular).");
+A(2,"Concordancia","Not one of the proposals ____ approved.","were|was|are|have","B","Not one of + singular: was.");
+A(2,"Concordancia","Many of the problems ____ solved last year.","was|were|is|has been","B","Many of + plural: were.");
+A(2,"Concordancia","Everyone in the audience ____ standing up.","were|are|is|have","C","Everyone es singular: is.");
+A(2,"Concordancia","Neither the director nor the actors ____ ready.","was|is|were|has been","C","Más cercano: actors (plural).");
+A(2,"Concordancia","One of the main causes of the crisis ____ unemployment.","are|were|is|have been","C","One of + singular: is.");
+A(2,"Concordancia","The teachers and the principal ____ in the meeting.","is|are|was|has been","B","A and B: plural.");
+A(2,"Concordancia","There ____ an interesting article in today's paper.","are|were|is|have been","C","Sujeto singular (article): is.");
+A(2,"Concordancia","Statistics ____ a required course for all business majors.","are|is|were|have been","B","Como materia, Statistics es singular.");
+A(2,"Concordancia","The young ____ often more adaptable than the old.","is|are|was|has been","B","The + adjetivo = grupo de personas (plural).");
+A(2,"Concordancia","A large number of tourists ____ visited the museum this year.","has|have|is|was","B","A number of + plural: have.");
+A(2,"Concordancia","The amount of time students spend studying ____ important.","are|is|were|have been","B","The amount of + singular: is.");
+A(2,"Concordancia","Both the chair and the table ____ broken.","is|was|are|has been","C","Both… and: plural.");
+
+// ===== LOTE 2 (continuación) – Parte B =====
+B(2,"Concordancia","[A]The [B]box of chocolates [C]were [D]on the table.","C","Núcleo box: was.");
+B(2,"Concordancia","[A]Mathematics and [B]physics [C]is [D]taught here.","C","Dos materias unidas por and: are taught.");
+B(2,"Concordancia","[A]The [B]students' opinions [C]was [D]carefully recorded.","C","Núcleo opinions: were.");
+B(2,"Concordancia","[A]Each [B]of the [C]members [D]have a vote.","D","Each of + singular: has.");
+B(2,"Concordancia","[A]The [B]pair of shoes [C]are [D]on sale.","C","Núcleo pair: is.");
+B(2,"Concordancia","[A]None of [B]the [C]evidence [D]were convincing.","D","Evidence es incontable: was.");
+B(2,"Concordancia","[A]The [B]chief cause of [C]delays [D]are bad weather.","D","Núcleo cause: is.");
+B(2,"Concordancia","[A]There [B]has [C]been [D]several complaints.","B","Sujeto plural: There have been.");
+B(2,"Concordancia","[A]Anyone who [B]want to join [C]must register [D]today.","B","Anyone: singular, wants.");
+B(2,"Concordancia","[A]My [B]sister and [C]her friend [D]is coming.","D","A and B: are coming.");
+B(2,"Concordancia","[A]Either the [B]students or the [C]teacher [D]are wrong.","D","Más cercano: teacher, is.");
+B(2,"Concordancia","[A]The [B]majority of [C]voters [D]is undecided.","D","Majority of + plural: are.");
+B(2,"Concordancia","[A]The [B]United States [C]have a [D]large economy.","C","Nombre de país en singular: has.");
+B(2,"Concordancia","[A]The [B]furniture in the [C]room [D]are new.","D","Furniture incontable: is.");
+B(2,"Concordancia","[A]A [B]third of the [C]population [D]live in cities.","D","Fracción + singular (population): lives.");
+B(2,"Concordancia","[A]The [B]number of [C]cars [D]are growing.","D","The number of: is growing.");
+B(2,"Concordancia","[A]Plenty of [B]students [C]has [D]already registered.","C","Plenty of + plural: have.");
+B(2,"Concordancia","[A]Nobody [B]in the [C]offices [D]were working.","D","Nobody es singular: was.");
+B(2,"Concordancia","[A]Her [B]jeans [C]was [D]very expensive.","C","Jeans es plural: were.");
+B(2,"Concordancia","[A]Every [B]one of [C]the [D]students were ready.","D","Every one of + singular: was.");
+B(2,"Singular/plural","There are [A]many [B]different [C]kind of [D]fish in this lake.","C","Many different kinds: plural.");
+B(2,"Contables","She gave [A]me [B]two [C]good [D]advice.","D","Advice incontable: pieces of advice.");
+B(2,"Singular/plural","[A]The [B]childrens [C]are [D]playing outside.","B","Plural irregular: children.");
+B(2,"Contables","[A]All [B]the [C]informations [D]is correct.","C","Information es incontable.");
+B(2,"Singular/plural","[A]Several [B]deers [C]were seen [D]near the lake.","B","Deer: plural igual al singular.");
+B(2,"Singular/plural","[A]Three [B]thousands [C]people [D]attended.","B","Con número exacto: thousand.");
+B(2,"Contables","[A]She [B]has [C]a lot of [D]luggages.","D","Luggage es incontable.");
+B(2,"Contables","[A]How [B]many [C]homework [D]do you have?","C","How much homework.");
+B(2,"Singular/plural","[A]Both [B]her [C]parent [D]work here.","C","Both + plural: parents.");
+B(2,"Contables","[A]Those [B]are [C]nice [D]furnitures.","D","Furniture es incontable.");
+B(2,"Cuantificadores","[A]Fewer [B]water [C]is [D]needed.","A","Water es incontable: Less water.");
+B(2,"Cuantificadores","[A]Much [B]people [C]think [D]so.","A","People es contable: Many people.");
+B(2,"Concordancia","[A]Economics [B]are [C]a [D]social science.","B","Economics: singular, is.");
+B(2,"Singular/plural","[A]A [B]number of [C]mistake [D]were found.","C","A number of + plural: mistakes.");
+B(2,"Concordancia","[A]The [B]team [C]members [D]was tired.","D","Núcleo members: were.");
+</script>
+<script>
+const app = document.getElementById("app");
+const store = {
+  get(){ try { return JSON.parse(localStorage.getItem("toefl-stats") || "{}"); } catch(e){ return {}; } },
+  set(v){ try { localStorage.setItem("toefl-stats", JSON.stringify(v)); } catch(e){} }
+};
+const shuffle = a => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const L = "ABCD";
+let S = null, timer = null;
+
+function rec(q, ok){
+  const s = store.get(), c = s[q.c] || (s[q.c] = { ok: 0, n: 0 });
+  c.n++; if (ok) c.ok++; store.set(s);
+}
+function segs(q){
+  const p = q.s.split(/\[([A-D])\]/), out = [];
+  for (let i = 1; i < p.length; i += 2) out.push(p[i + 1].replace(/[.,;?!\s]+$/, ""));
+  return out;
+}
+function sentence(q){
+  if (q.t === "A") return q.s.replace("____", '<span class="blank"></span>');
+  const p = q.s.split(/\[([A-D])\]/); let h = p[0];
+  for (let i = 1; i < p.length; i += 2) {
+    const m = p[i + 1].match(/^([\s\S]*?)(\s*[.,;?!]*\s*)$/);
+    h += "<u><sup>" + p[i] + "</sup>" + m[1] + "</u>" + m[2];
+  }
+  return h;
+}
+function options(q){ return q.t === "A" ? q.o : segs(q); }
+
+const TH={
+"Estructura":{p:"Muy alta",r:["Toda oración necesita sujeto + verbo conjugado. Un -ing solo, un to + verbo o un participio solo NO son el verbo principal.","Parte A: antes de mirar las opciones, decidí qué falta: sujeto, verbo, conector o relativa.","✗ dos verbos principales sin conector (The man is a doctor works here). ✗ fragmentos y run-on.","Truco: tachá lo que está entre comas y las frases con preposición; lo que queda es el núcleo."]},
+"Concordancia":{p:"Muy alta",r:["Buscá el núcleo del sujeto, no el sustantivo más cercano: The list of items IS long.","The number of + plural → singular (has). A number of + plural → plural (have).","Each / every / either / neither / one of + singular. None of + incontable → singular.","Neither…nor, either…or, not only…but also: el verbo concuerda con el sujeto más cercano.","There is / There are: el sujeto viene después del verbo.","Materias en -ics (economics), news y los incontables → singular. People, police → plural.","Along with / together with / as well as no suman: The teacher, along with the students, IS here."]},
+"Tiempos":{p:"Muy alta",r:["since + punto en el tiempo / for + duración → present perfect (has lived).","yesterday, last week, ago, in 1999 → past simple. ✗ I have seen him yesterday.","By the time + pasado → had + participio. By + fecha futura → will have + participio.","Después de if / when / until / as soon as / before / after: nunca will.","Verbos de estado (know, believe, want, own, seem) no van en -ing: ✗ I am knowing.","already, yet, just, ever, never, so far → present perfect."]},
+"Word form":{p:"Muy alta",r:["Sustantivo: después de the / a / un adjetivo / una preposición.","Adjetivo: antes de un sustantivo o después de be / seem / become / feel.","Adverbio (-ly): modifica verbos y adjetivos: speaks fluently, extremely useful.","Sufijos: -tion, -ment, -ness, -ity (sustantivo); -ful, -ous, -ive, -al (adjetivo).","Pares trampa: affect (verbo) / effect (sustantivo); economic / economical; successful / successive."]},
+"Contables":{p:"Muy alta",r:["Incontables típicos: information, advice, research, evidence, equipment, furniture, luggage, homework, news, traffic, progress.","Sin -s y sin a/an: ✗ informations, advices, homeworks → ✓ information, advice, homework.","Para contarlos: a piece of information, an item of equipment."]},
+"Cuantificadores":{p:"Muy alta",r:["many / few / fewer + plural contable. much / little / less + incontable.","✗ much people → many people. ✗ less cars → fewer cars. ✗ many research → much research.","a few / a little = suficiente (positivo). few / little = casi nada (negativo).","most students o most of THE students (most of necesita the)."]},
+"Singular/plural":{p:"Muy alta",r:["One of the + plural: one of the most important reasons.","Each / every + singular: every student (no students).","any other + singular: longer than any other river.","Plurales irregulares: children, people, phenomena, criteria, deer.","Con número exacto no hay -s: three hundred, two thousand.","Both / several / many + plural."]},
+"Paralelismo":{p:"Alta",r:["Los elementos de una lista deben tener la misma forma: ✓ swimming, running and cycling.","both…and, either…or, neither…nor, not only…but also: lo que sigue a cada parte debe ser del mismo tipo.","Comparaciones: The climate of Spain is warmer than THAT OF Norway."]},
+"Patrones verbales":{p:"Alta",r:["+ -ing: enjoy, avoid, finish, keep, consider, suggest, recommend, admit, deny, postpone.","+ to: want, need, decide, hope, plan, refuse, manage, afford, promise.","Después de preposición, siempre -ing: interested in studying, look forward to hearing, be used to getting up.","suggest NO lleva objeto + to: suggested taking / suggested that we take.","make / let + objeto + base verb; en pasiva make recupera to: were made TO wait."]},
+"Preposiciones":{p:"Alta",r:["depend on, consist of, result in, suffer from, focus on, interested in, responsible for, different from.","No llevan preposición: discuss, enter, explain, mention, marry. ✗ discuss about, ✗ married with.","Tiempo: at (hora, night, the weekend), on (días, fechas), in (meses, años, estaciones)."]},
+"Comparativos":{p:"Alta",r:["✗ more easier, ✗ most easiest → easier, the easiest.","The more you practice, THE better you speak: no olvides el segundo the.","Entre dos: comparativo (the taller of the two). Tres o más: superlativo.","different from, the same as, similar to."]},
+"Relativas":{p:"Alta",r:["who (personas), which (cosas), that (ambos), whose (posesión).","whose + sustantivo: the company whose products… (✗ which products).","Con comas (non-defining) no se usa that: The report, WHICH was published…","✗ no repitas el pronombre: The book that I read it → The book that I read."]},
+"Conectores":{p:"Alta",r:["although / even though + cláusula. despite / in spite of + sustantivo o -ing (✗ despite of).","because + cláusula. because of + sustantivo.","✗ Although… but…: una de las dos sobra.","Hardly… WHEN, no sooner… THAN."]},
+"Participios":{p:"Alta",r:["El sujeto implícito debe ser el sujeto de la cláusula principal.","✓ Founded in 1998, the company employs 5,000 people.","✗ Walking down the street, the building looked impressive.","Having + participio = acción anterior: Having finished, she left."]},
+"Inversión":{p:"Media",r:["Never, rarely, seldom, hardly, little, not only, not until, only after, under no circumstances al inicio → auxiliar + sujeto.","Rarely HAVE I seen… / Not only DID she pass… / Not until the lights went out DID we notice.","so / neither (coincidencia): So does she. Neither do I."]},
+"Condicionales":{p:"Media",r:["1°: if + presente, will. 2°: if + pasado, would (If I WERE you). 3°: if + had + participio, would have + participio.","Nunca will / would en la cláusula con if.","Inversión formal: Had she known, she would have called."]},
+"Subjuntivo":{p:"Media",r:["insist, suggest, recommend, demand, require, request + that + verbo en forma base: insisted that he SUBMIT.","it is essential / important / vital that + base: it is essential that she BE present.","✗ insisted that he submits."]},
+"Preguntas indirectas":{p:"Media",r:["Orden de afirmación y sin do / does / did: ✗ asked me where did I live → ✓ where I lived.","Sí/No: if o whether: He asked if I agreed.","I wonder where the station is (no where is the station)."]},
+"Modales":{p:"Media",r:["Modal + base verb, sin to ni -s: ✗ must to finish, ✗ can goes.","mustn't = prohibido. don't have to = no es obligatorio.","should have + participio = crítica. must have + participio = deducción.","was able to / managed to para un logro puntual (no could)."]},
+"Artículos":{p:"Media",r:["a / an según el SONIDO: an hour, an honest man, a university.","Ideas generales sin the: Education is important.","the con algo específico, superlativos, ríos y mares: the Nile."]},
+"Redundancia":{p:"Media",r:["✗ return back, repeat again, more better.","The reason is THAT… (✗ the reason is because)."]},
+"Pasiva":{p:"Media",r:["be + participio. Solo los verbos transitivos tienen pasiva.","✗ The accident was happened → ✓ happened. Intransitivos: happen, occur, arrive, appear, die, seem.","have / get + algo + participio: I had my car repaired."]},
+"Ortografía":{p:"Media",r:["there is (existe) vs their (de ellos) vs they're (they are).","its (posesivo) vs it's (it is). then (luego) vs than (comparación)."]}
+};
+const CHULETA=["since / for / ago / yesterday → revisá el tiempo verbal","the number of / each / neither / there is → concordancia","much / many / less / fewer → contable o incontable","information, advice, research con -s → incontable","listas con and / or → paralelismo","although / despite / because of → conector","who / which / whose / that → relativa","more + comparativo → doble comparativo","suggest / insist + that → forma base","Never / Rarely / Not only al inicio → inversión"];
+function pcount(c){ return Q.filter(q => q.c === c).length; }
+function acc(c){ const s = store.get()[c]; return s && s.n ? Math.round(100 * s.ok / s.n) : null; }
+function badge(c){ const a = acc(c); return a == null ? "" : '<span class="bd ' + (a >= 80 ? "g" : a >= 60 ? "m" : "r") + '">' + a + '%</span>'; }
+function theoryBox(c){ const t = TH[c]; return t ? '<details class="card"><summary>Repasar teoría: ' + c + '</summary><ul class="rules">' + t.r.map(x => '<li>' + x + '</li>').join("") + '</ul></details>' : ""; }
+
+function home(){
+  clearInterval(timer); S = null;
+  const st = store.get();
+  const rows = Object.keys(st).sort((a, b) => st[a].ok / st[a].n - st[b].ok / st[b].n).map(c => {
+    const p = Math.round(100 * st[c].ok / st[c].n);
+    return '<div class="row"><span>' + c + '</span><div class="meter"><i style="width:' + p + '%"></i></div><span>' + p + '% (' + st[c].n + ')</span></div>';
+  }).join("");
+  app.innerHTML =
+    '<h1>TOEFL ITP · Grammar Trainer</h1><p class="sub">Teoría + práctica de Structure & Written Expression · ' + Q.length + ' preguntas</p>' +
+    '<div class="grid"><button class="big2" id="bt">Teoría<small>Qué puede tocar y las reglas clave</small></button>' +
+    '<button class="big2" id="bpz">Práctica<small>Por lote, parte o categoría, con corrección</small></button>' +
+    '<button class="big2" id="bs">Simulacro<small>15 de Parte A + 25 de Parte B · 25 minutos</small></button></div>' +
+    '<h2>Tu precisión por categoría</h2>' + (rows || '<p class="sub">Todavía no hay datos. Hacé una práctica y vas a ver tus puntos débiles acá.</p>') +
+    (rows ? '<button class="ghost" id="br">Borrar estadísticas</button>' : "");
+  document.getElementById("bt").onclick = theory;
+  document.getElementById("bpz").onclick = () => setup("");
+  document.getElementById("bs").onclick = () => start("simulacro", [
+    ...shuffle(Q.filter(q => q.t === "A")).slice(0, 15),
+    ...shuffle(Q.filter(q => q.t === "B")).slice(0, 25)
+  ]);
+  const br = document.getElementById("br");
+  if (br) br.onclick = () => { if (confirm("¿Borrar todas tus estadísticas?")) { store.set({}); home(); } };
+}
+
+function theory(){
+  const groups = ["Muy alta", "Alta", "Media"].map(pr => '<div class="pri">' + pr + ' probabilidad</div>' +
+    Object.keys(TH).filter(c => TH[c].p === pr).map(c => '<button class="cat" data-c="' + c + '">' + c + badge(c) + '<br><small>' + (pcount(c) ? pcount(c) + " ejercicios" : "solo teoría") + '</small></button>').join("")).join("");
+  app.innerHTML = '<h1>Qué puede tocar</h1><p class="sub">Orden orientativo según el formato habitual del examen. Tocá una categoría para ver las reglas.</p>' +
+    '<details class="card" open><summary>Chuleta de señales (leela antes del examen)</summary><ul class="rules">' + CHULETA.map(x => '<li>' + x + '</li>').join("") + '</ul></details>' +
+    groups + '<button class="ghost" id="bk">Volver</button>';
+  app.querySelectorAll(".cat").forEach(b => b.onclick = () => detail(b.dataset.c));
+  document.getElementById("bk").onclick = home;
+}
+
+function detail(c){
+  const t = TH[c], n = pcount(c);
+  app.innerHTML = '<div class="tag">' + t.p + ' probabilidad</div><h1>' + c + '</h1>' +
+    '<div class="card"><ul class="rules" style="margin:0">' + t.r.map(x => '<li>' + x + '</li>').join("") + '</ul></div>' +
+    (n ? '<button class="go" id="pr">Practicar esta categoría (' + n + ')</button>' : '<p class="sub">Esta categoría todavía no tiene ejercicios en el banco.</p>') +
+    '<button class="ghost" id="bk">Volver a la teoría</button>';
+  if (n) document.getElementById("pr").onclick = () => start("practica", shuffle(Q.filter(q => q.c === c)).slice(0, 10));
+  document.getElementById("bk").onclick = theory;
+}
+
+function setup(cat0){
+  const lotes = [...new Set(Q.map(q => q.l))].sort();
+  const cats = [...new Set(Q.map(q => q.c))].sort();
+  app.innerHTML = '<h1>Práctica</h1><div class="card">' +
+    '<label for="lote">Lote</label><select id="lote"><option value="0">Todos</option>' + lotes.map(l => '<option value="' + l + '">Lote ' + l + '</option>').join("") + '</select>' +
+    '<label for="parte">Parte</label><select id="parte"><option value="">A y B</option><option value="A">A – Completar</option><option value="B">B – Encontrar el error</option></select>' +
+    '<label for="cat">Categoría</label><select id="cat"><option value="">Todas</option>' + cats.map(c => '<option' + (c === cat0 ? " selected" : "") + '>' + c + '</option>').join("") + '</select>' +
+    '<label for="n">Cantidad</label><select id="n"><option>10</option><option selected>20</option><option>40</option></select>' +
+    '<button class="go" id="bp">Empezar</button></div><button class="ghost" id="bk">Volver</button>';
+  document.getElementById("bk").onclick = home;
+  document.getElementById("bp").onclick = () => {
+    const l = +document.getElementById("lote").value, p = document.getElementById("parte").value, c = document.getElementById("cat").value, n = +document.getElementById("n").value;
+    const pool = Q.filter(q => (!l || q.l === l) && (!p || q.t === p) && (!c || q.c === c));
+    if (!pool.length) { alert("No hay preguntas con ese filtro."); return; }
+    start("practica", shuffle(pool).slice(0, n));
+  };
+}
+
+function start(mode, qs){
+  S = { mode, qs, i: 0, ans: [], left: 1500 };
+  if (mode === "simulacro") {
+    timer = setInterval(() => {
+      S.left--;
+      const el = document.getElementById("tm");
+      if (el) el.textContent = Math.floor(S.left / 60) + ":" + String(S.left % 60).padStart(2, "0");
+      if (S.left <= 0) finish();
+    }, 1000);
+  }
+  show();
+}
+
+function show(){
+  const q = S.qs[S.i], sim = S.mode === "simulacro", done = S.ans[S.i] != null;
+  const o = options(q);
+  const btns = o.map((t, k) => {
+    let cl = "";
+    if (sim) cl = S.ans[S.i] === k ? "sel" : "";
+    else if (done) cl = k === q.a ? "ok" : (k === S.ans[S.i] ? "no" : "");
+    return '<button class="' + cl + '" data-k="' + k + '"><b>' + L[k] + '</b>' + t + '</button>';
+  }).join("");
+  const last = S.i === S.qs.length - 1;
+  let fb = "";
+  if (!sim && done) fb = '<div class="exp"><b>' + (S.ans[S.i] === q.a ? "Correcto." : "Era la " + L[q.a] + ".") + '</b> ' + q.e + '<div class="tag">' + q.c + '</div></div>' + theoryBox(q.c);
+  app.innerHTML =
+    '<div class="bar"><span>' + (S.i + 1) + " / " + S.qs.length + '</span><span>' + (sim ? '<span id="tm">' + Math.floor(S.left / 60) + ":" + String(S.left % 60).padStart(2, "0") + '</span>' : "Parte " + q.t) + '</span></div>' +
+    '<div class="sent">' + sentence(q) + '</div>' +
+    '<div class="opts">' + btns + '</div>' + fb +
+    ((sim || done) ? '<button class="go" id="nx">' + (last ? "Ver resultados" : "Siguiente") + '</button>' : "") +
+    '<button class="ghost" id="ex">Salir</button>';
+  app.querySelectorAll(".opts button").forEach(b => b.onclick = () => {
+    if (!sim && done) return;
+    S.ans[S.i] = +b.dataset.k;
+    if (!sim) rec(q, S.ans[S.i] === q.a);
+    show();
+  });
+  const nx = document.getElementById("nx");
+  if (nx) nx.onclick = () => last ? finish() : (S.i++, show());
+  document.getElementById("ex").onclick = () => { if (confirm("¿Salir? Se pierde el progreso de esta tanda.")) home(); };
+}
+
+function finish(){
+  clearInterval(timer);
+  const sim = S.mode === "simulacro";
+  let ok = 0; const by = {}, errs = [];
+  S.qs.forEach((q, i) => {
+    const good = S.ans[i] === q.a;
+    if (sim) rec(q, good);
+    if (good) ok++; else errs.push([q, S.ans[i]]);
+    const c = by[q.c] || (by[q.c] = { ok: 0, n: 0 }); c.n++; if (good) c.ok++;
+  });
+  const pct = Math.round(100 * ok / S.qs.length);
+  const rows = Object.keys(by).sort((a, b) => by[a].ok / by[a].n - by[b].ok / by[b].n).map(c =>
+    '<div class="row"><span>' + c + '</span><div class="meter"><i style="width:' + Math.round(100 * by[c].ok / by[c].n) + '%"></i></div><span>' + by[c].ok + "/" + by[c].n + '</span></div>').join("");
+  const er = errs.map(([q, a]) => {
+    const o = options(q);
+    return '<div class="err"><div class="sent" style="font-size:18px;margin:0 0 6px">' + sentence(q) + '</div>' +
+      '<div class="tag">Tu respuesta: ' + (a == null ? "sin responder" : L[a] + " · " + o[a]) + '</div>' +
+      '<div class="tag">Correcta: ' + L[q.a] + " · " + o[q.a] + '</div><div class="exp" style="margin:8px 0 0">' + q.e + '</div></div>';
+  }).join("");
+  app.innerHTML =
+    '<h1>Resultado</h1><div class="big">' + ok + " / " + S.qs.length + '</div><p class="sub">' + pct + '% de aciertos' + (sim ? " · objetivo del simulacro: 85% o más" : "") + '</p>' +
+    '<h2>Por categoría (de menor a mayor acierto)</h2>' + rows +
+    (errs.length ? '<h2>Para repasar</h2>' + er : '<p class="sub">Sin errores en esta tanda.</p>') +
+    '<button class="go" id="again">Volver al inicio</button>';
+  document.getElementById("again").onclick = home;
+}
+home();
+</script>
+</body>
+</html>
